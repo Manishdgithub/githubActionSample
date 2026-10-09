@@ -104,7 +104,9 @@ jobs:
 
       - name: Install Frontend Dependencies
         working-directory: frontend
-        run: npm install
+        run: |
+          npm install
+          chmod -R +x node_modules/.bin
 
       - name: Frontend Linter & Unit Tests
         working-directory: frontend
