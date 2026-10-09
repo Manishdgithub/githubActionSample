@@ -1,9 +1,11 @@
 from datetime import datetime, timedelta, timezone
+
 import bcrypt
 import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
+
 from enterprise_hub.config import settings
 from enterprise_hub.database import get_db
 from enterprise_hub.models import User
