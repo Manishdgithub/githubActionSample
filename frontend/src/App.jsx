@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function App() {
   const [token, setToken] = useState(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [auditMessage, setAuditMessage] = useState('');
   const [statusText, setStatusText] = useState('Idle');
 
   const handleLogin = async (e) => {
@@ -20,7 +19,7 @@ export default function App() {
       const data = await res.json();
       setToken(data.access_token);
       setStatusText('Authenticated Successfully');
-    } catch (err) {
+    } catch {
       setStatusText('Authentication Error');
     }
   };
