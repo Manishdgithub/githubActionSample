@@ -1,9 +1,11 @@
 FROM node:20-alpine AS frontend-builder
 WORKDIR /build
+
 COPY frontend/package*.json ./
-RUN npm ci
+RUN npm install
+
 COPY frontend/ ./
-RUN npm run build
+RUN chmod -R +x node_modules/.bin && npm run build
 
 FROM python:3.12-slim AS runner
 WORKDIR /app
