@@ -1,6 +1,7 @@
 import httpx
 from enterprise_hub.config import settings
 
+
 async def dispatch_webhook_event(event_type: str, payload: dict) -> bool:
     """Dispatches external webhook integration events with timeout protection."""
     async with httpx.AsyncClient(timeout=5.0) as client:

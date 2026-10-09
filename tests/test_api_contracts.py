@@ -1,9 +1,11 @@
 from fastapi.testclient import TestClient
 
+
 def test_health_check(client: TestClient):
     response = client.get("/healthz")
     assert response.status_code == 200
     assert response.json() == {"status": "healthy", "database": "connected"}
+
 
 def test_full_auth_and_audit_contract(client: TestClient):
     # 1. Register User
@@ -45,6 +47,7 @@ def test_full_auth_and_audit_contract(client: TestClient):
     logs = list_resp.json()
     assert len(logs) == 1
     assert logs[0]["action"] == "ORDER_PLACED"
+
 
 def test_unauthorized_access_rejection(client: TestClient):
     resp = client.get("/api/v1/users/me")

@@ -24,10 +24,12 @@ from enterprise_hub.schemas import (
     UserResponse,
 )
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     Base.metadata.create_all(bind=engine)
     yield
+
 
 app = FastAPI(title="Enterprise Production Hub API", lifespan=lifespan)
 
@@ -39,15 +41,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/healthz", tags=["System"])
 def health_check():
     return {"status": "healthy", "database": "connected"}
 
-@app.post("/api/v1/auth/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+
+@app.post(
+    "/api/v1/auth/register",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 def register(user_data: UserRegister, db: Session = Depends(get_db)):
     if db.query(User).filter(User.email == user_data.email).first():
         raise HTTPException(status_code=400, detail="Email already registered")
-    
+
     new_user = User(
         email=user_data.email,
         hashed_password=hash_password(user_data.password),
@@ -57,6 +65,7 @@ def register(user_data: UserRegister, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
     return new_user
+
 
 @app.post("/api/v1/auth/login", response_model=TokenResponse)
 def login(login_data: UserLogin, db: Session = Depends(get_db)):
@@ -69,11 +78,17 @@ def login(login_data: UserLogin, db: Session = Depends(get_db)):
     token = create_access_token(data={"sub": user.email, "role": user.role})
     return TokenResponse(access_token=token)
 
+
 @app.get("/api/v1/users/me", response_model=UserResponse)
 def get_me(current_user: User = Depends(get_current_user)):
     return current_user
 
-@app.post("/api/v1/audit", response_model=AuditLogResponse, status_code=status.HTTP_201_CREATED)
+
+@app.post(
+    "/api/v1/audit",
+    response_model=AuditLogResponse,
+    status_code=status.HTTP_201_CREATED,
+)
 async def create_audit_record(
     log: AuditLogCreate,
     current_user: User = Depends(get_current_user),
@@ -89,9 +104,12 @@ async def create_audit_record(
     db.refresh(audit_entry)
 
     # Trigger external asynchronous integration
-    await dispatch_webhook_event(log.action, {"user": current_user.email, "id": audit_entry.id})
+    await dispatch_webhook_event(
+        log.action, {"user": current_user.email, "id": audit_entry.id}
+    )
 
     return audit_entry
+
 
 @app.get("/api/v1/audit", response_model=list[AuditLogResponse])
 def list_audit_records(
@@ -100,10 +118,12 @@ def list_audit_records(
 ):
     return db.query(AuditLog).filter(AuditLog.user_id == current_user.id).all()
 
+
 # Serve UI frontend if compiled
 if os.path.exists("frontend/dist"):
     app.mount("/", StaticFiles(directory="frontend/dist", html=True), name="static")
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run("enterprise_hub.app:app", host="0.0.0.0", port=8000, reload=False)
