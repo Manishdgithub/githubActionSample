@@ -8,3 +8,5 @@ Production-ready architecture designed to meet rigorous CI/CD criteria across 7 
 5. **Performance Verification**: Continuous automated load and latency smoke testing (k6) with sub-200ms latency enforcement.
 6. **Code Quality**: Ruff for sub-second formatting and linting.
 7. **Deployment Readiness**: Multi-stage Docker build, non-root user execution, and container healthchecks.
+
+<!-- test trigger for local cd pr -->
