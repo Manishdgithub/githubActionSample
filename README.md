@@ -10,3 +10,5 @@ Production-ready architecture designed to meet rigorous CI/CD criteria across 7 
 7. **Deployment Readiness**: Multi-stage Docker build, non-root user execution, and container healthchecks.
 
 <!-- test trigger for local cd pr -->
+
+<!-- test trigger for local cd pr -->
