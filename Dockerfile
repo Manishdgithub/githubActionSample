@@ -34,3 +34,4 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
   CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz')" || exit 1
 
 CMD ["uvicorn", "enterprise_hub.app:app", "--host", "0.0.0.0", "--port", "8000"]
+#docker run -d \ -p 8000:8000 \ -v enterprise-data:/data \ ghcr.io/manishdgithub/githubactionsample:latest

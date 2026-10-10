@@ -1,0 +1,32 @@
+version: '3'
+
+vars:
+  APP_NAME: 'enterprise-app'
+
+tasks:
+  default:
+    desc: 'Runs when you simply type `task`'
+    cmds:
+      - task: test
+
+  lint:
+    desc: 'Run code linters'
+    cmds:
+      - ruff check .
+      - ruff format --check .
+
+  test:
+    desc: 'Run unit tests'
+    deps: [lint]  # Runs the lint task first
+    cmds:
+      - pytest --cov=src
+
+  build:
+    desc: 'Build Docker image'
+    cmds:
+      - docker build -t {{.APP_NAME}}:latest .
+    sources:
+      - Dockerfile
+      - src/**/*.py
+    generates:
+      - dist/*
